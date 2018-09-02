@@ -1,4 +1,4 @@
-package com.invertase.rnfirebasestarter;
+package com.kiwicube.machingword;
 
 import android.annotation.SuppressLint;
 import android.app.Application;

@@ -3,6 +3,10 @@ import { StyleSheet, Platform, Image, Text, View, ScrollView } from 'react-nativ
 
 import firebase from 'react-native-firebase';
 
+//import Home from './components/Home.js';
+//import Setting from './components/Setting.js';
+import Help from './components/Help.js';
+
 export default class App extends React.Component {
   constructor() {
     super();
@@ -17,6 +21,21 @@ export default class App extends React.Component {
 
   render() {
     return (
+
+      <View style = {{
+        flex: 1,
+        flexDirection:'row',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        margin: 10, 
+        backgroundColor: '#01646D'
+        
+    }}>
+    
+    <Help/>
+
+    </View>
+      /*
       <ScrollView>
         <View style={styles.container}>
           <Image source={require('./assets/RNFirebase.png')} style={[styles.logo]}/>
@@ -57,6 +76,7 @@ export default class App extends React.Component {
           </View>
         </View>
       </ScrollView>
+      */
     );
   }
 }

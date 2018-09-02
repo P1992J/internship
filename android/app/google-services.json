@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "810472391028",
+    "firebase_url": "https://wordmatch-b0b75.firebaseio.com",
+    "project_id": "wordmatch-b0b75",
+    "storage_bucket": "wordmatch-b0b75.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810472391028:android:9a3cc70a58521b85",
+        "android_client_info": {
+          "package_name": "com.kiwicube.machingword"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810472391028-p8g55ias18j3p9fohu7vtfkig67ltqhn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVTiARhq0s8IqtUJKhewS6gaCOqZAqsHg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
