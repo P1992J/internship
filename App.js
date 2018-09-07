@@ -5,7 +5,9 @@ import firebase from 'react-native-firebase';
 
 //import Home from './components/Home.js';
 //import Setting from './components/Setting.js';
-import Help from './components/Help.js';
+//import Help from './components/Help.js';
+import MyApp from './components/MyApp.js';
+//import Menu from './components/Menu.js';
 
 export default class App extends React.Component {
   constructor() {
@@ -32,7 +34,7 @@ export default class App extends React.Component {
         
     }}>
     
-    <Help/>
+    <MyApp/>
 
     </View>
       /*

@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import { View, Image, Text, StyleSheet } from 'react-native';
+import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default class Setting extends Component {
+    FunctionToGoBack = () => {
+        this.props.navigation.navigate('Home');
+    }
     render() {
         return (
             <View style = {styles.containerStyle}>
@@ -13,10 +16,12 @@ export default class Setting extends Component {
                 </View>
 
                 <View style = {{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', paddingTop: 10}}>
-                    <Image 
-                        style = {{width: 80, height: 70}}
-                        source = {{ uri: 'https://firebasestorage.googleapis.com/v0/b/wordmatch-b0b75.appspot.com/o/back_arrow.png?alt=media&token=06f9f660-fc7f-4c0f-b9d5-d51f0cfbcde3'}}
-                    />
+                    <TouchableOpacity onPress = { this.FunctionToGoBack}>
+                        <Image 
+                            style = {{width: 80, height: 70}}
+                            source = {{ uri: 'https://firebasestorage.googleapis.com/v0/b/wordmatch-b0b75.appspot.com/o/back_arrow.png?alt=media&token=06f9f660-fc7f-4c0f-b9d5-d51f0cfbcde3'}}
+                        />
+                    </TouchableOpacity>
                 </View>
 
                 <View  style = {{ flex:1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding:20}}>
