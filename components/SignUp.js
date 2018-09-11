@@ -3,13 +3,13 @@ import { ScrollView, StyleSheet, Text, TextInput, View, Button, Image, Touchable
 import firebase from 'react-native-firebase'
 
 export default class SignUp extends React.Component {
-  state = { email: '', password: '', errorMessage: null }
+  state = { email: '', password: '',recoveryCode:'', errorMessage: null }
 
   handleSignUp = () => {
-    const { email, password } = this.state
+    const { email, password, recoveryCode } = this.state
     firebase
       .auth()
-      .createUserAndRetrieveDataWithEmailAndPassword(email, password)
+      .createUserAndRetrieveDataWithEmailAndPassword(email, password,recoveryCode)
       .then(user => this.props.navigation.navigate('Menu'))
       .catch(error => this.setState({ errorMessage: error.message }))
   }
@@ -38,7 +38,7 @@ export default class SignUp extends React.Component {
         <View style = {{ flex:1,flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start',paddingTop:20}}>
           <TouchableOpacity onPress = { this.FunctionToGoBack}>
             <Image 
-                style = {{width: 70, height: 60}}
+                style = {{width: 40, height: 40}}
                 source = {{ uri: 'https://firebasestorage.googleapis.com/v0/b/wordmatch-b0b75.appspot.com/o/back_arrow.png?alt=media&token=06f9f660-fc7f-4c0f-b9d5-d51f0cfbcde3'}}
             />
           </TouchableOpacity>
@@ -65,6 +65,15 @@ export default class SignUp extends React.Component {
             onChangeText={password => this.setState({ password })}
             value={this.state.password}
           />
+          <TextInput
+            secureTextEntry
+            placeholder="Recovery Code"
+            autoCapitalize="none"
+            style={styles.textInput}
+            onChangeText={password => this.setState({ password })}
+            value={this.state.password}
+          />
+          
           <View style = {{  flexDirection: 'row',justifyContent: 'flex-start', alignItems:'stretch', padding:20}} >
             <View style = {{ paddingRight: 30}}>
               <Button  title="Sign Up" onPress={this.handleSignUp} />
