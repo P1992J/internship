@@ -38,7 +38,7 @@ export default class Login extends React.Component {
         <View style = {{ flex:1,flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', paddingTop: 20}}>
           <TouchableOpacity onPress = { this.FunctionToGoBack}>
             <Image 
-                style = {{width: 70, height: 60}}
+                style = {{width: 40, height: 40}}
                 source = {{ uri: 'https://firebasestorage.googleapis.com/v0/b/wordmatch-b0b75.appspot.com/o/back_arrow.png?alt=media&token=06f9f660-fc7f-4c0f-b9d5-d51f0cfbcde3'}}
             />
           </TouchableOpacity>
@@ -69,7 +69,7 @@ export default class Login extends React.Component {
               <Button title="Login" onPress={this.handleLogin} />
             </View>
             <View style = {{paddingLeft: 30}}>
-              <Button title = "Cancel" onPress = {() => this.saveCancle()}/>
+              <Button title = "Cancel" onPress = {() => this._saveCancle()}/>
             </View>
             </View>
             <View style = {{justifyContent: 'flex-start', alignItems:'flex-start', padding:20}}>

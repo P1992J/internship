@@ -10,7 +10,10 @@ import Loading from './Loading'
 import SignUp from './SignUp'
 import Login from './Login'
 import Menu from './Menu'
-import Main from './Main'
+//import Main from './Main'
+import Resume from './Resume'
+import Score from './Score'
+import Wordwork5 from './Wordwork5'
 
 // create our app's navigation stack
 const MyApp = SwitchNavigator(
@@ -22,7 +25,10 @@ const MyApp = SwitchNavigator(
     Loading,
     SignUp,
     Login,
-    Main
+    //Main,
+    Resume,
+    Wordwork5,
+    Score
     
   },
   {

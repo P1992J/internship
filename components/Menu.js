@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { View, Image, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
 
+import firebase from 'react-native-firebase'
+
 export default class Menu extends Component {
     _userSignout = () => {
         this.setState({ currentUser: null });
@@ -21,13 +23,13 @@ export default class Menu extends Component {
                 <View style = {{ flexDirection: 'column', justifyContent:'center', alignItems:'center', paddingBottom:50}}>
                     <View style = {{ paddingBottom:30 }}>
                         <TouchableOpacity style = {styles.submitButtonStyle}
-                           onPress={() => this.props.navigation.navigate('Main')}>
+                           onPress={() => this.props.navigation.navigate('Wordwork5')}>
                             <Text style = {{ color:'#800080',fontSize: 22, fontStyle: 'italic', fontWeight:'bold'}}> New Game </Text>
                         </TouchableOpacity>
                     </View>
                     <View style = {{  paddingTop: 5, paddingBottom:30 }}>
                     <TouchableOpacity style = {styles.submitButtonStyle}
-                           onPress={() => this.props.navigation.navigate('Main')}>
+                           onPress={() => this.props.navigation.navigate('Resume')}>
                             <Text style = {{color:'#800080', fontSize: 22, fontStyle: 'italic', fontWeight:'bold'}}> Resume Game </Text>
                         </TouchableOpacity>
                     </View>

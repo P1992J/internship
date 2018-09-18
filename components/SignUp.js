@@ -70,8 +70,8 @@ export default class SignUp extends React.Component {
             placeholder="Recovery Code"
             autoCapitalize="none"
             style={styles.textInput}
-            onChangeText={password => this.setState({ password })}
-            value={this.state.password}
+            onChangeText={recoveryCode => this.setState({ recoveryCode })}
+            value={this.state.recoveryCode}
           />
           
           <View style = {{  flexDirection: 'row',justifyContent: 'flex-start', alignItems:'stretch', padding:20}} >
