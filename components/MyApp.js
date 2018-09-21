@@ -11,9 +11,13 @@ import SignUp from './SignUp'
 import Login from './Login'
 import Menu from './Menu'
 //import Main from './Main'
-import Resume from './Resume'
+//import Resume from './Resume'
 import Score from './Score'
-import Wordwork5 from './Wordwork5'
+//import Wordwork5 from './Wordwork5'
+import Wordwork6 from './Wordwork6'
+import Wordwork7 from './Wordwork7'
+import StarRating from './StarRating'
+
 
 // create our app's navigation stack
 const MyApp = SwitchNavigator(
@@ -26,9 +30,12 @@ const MyApp = SwitchNavigator(
     SignUp,
     Login,
     //Main,
-    Resume,
-    Wordwork5,
-    Score
+    //Resume,
+    //Wordwork5,
+    Wordwork6,
+    Score,
+    Wordwork7,
+    StarRating
     
   },
   {

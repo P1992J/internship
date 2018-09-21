@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, FlatList, Image, Text, View, TouchableOpacity, TextInput, Button, Dimensions, Keyboard, ScrollView, Alert, ActivityIndicator, } from "react-native";
+import { StyleSheet, FlatList, Text, View, TouchableOpacity, TextInput, Button, Dimensions, Keyboard, ScrollView, Alert, ActivityIndicator, } from "react-native";
 
 import firebase from 'react-native-firebase';
-import Swiper from 'C:/Users/JULITA VIRAL PATEL/AppData/Local/Microsoft/TypeScript/2.9/node_modules/@types/react-native-swiper';
+import Swiper from 'react-native-swiper';
 
 import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
+
+import ToggleSwitch from 'toggle-switch-react-native';
+import Emoji from 'react-native-emoji';
 
 var screenwidth = Dimensions.get('window').width;
 
@@ -12,8 +15,7 @@ var tblCol = 8;
 var tblRow = 10;
 var tblData = [];
 
-export default class Wordwork5 extends Component {
-    state = { currentUser: null };
+export default class Wordwork7 extends Component {
     constructor(props) {
         super(props);
 
@@ -22,22 +24,25 @@ export default class Wordwork5 extends Component {
 
         this.state = {
             aletter: 'A',
+            bletter: 'B',
+            cletter: 'C',
             isLoading: false,
             dataItems: [],
             hintItems: [],
             relatedItems: [],
             partword: '',
             spellCorrect: false,
-            //nowscore: 0,
-            uemail: '',
-            score: 0,
-            //currentUser: null,
-            //userExist: false,
-            //docid: '',
+            nowscore: 0,
+            email: '',
+            scores: [],
+            currentUser: null,
+            userExist: false,
+            docid: '',
             tableHead: [],
             tableData: [],
             wCol: 0,
             wRow: 0,
+            isRight: true,
         };
 
     }
@@ -48,7 +53,9 @@ export default class Wordwork5 extends Component {
 
         const { currentUser } = firebase.auth();
         this.setState({ currentUser });
-        this.setState({ uemail: this.state.currentUser });
+        // find user existing score
+        var uemail = currentUser.email;
+        this._findemailscore(uemail);
 
         this._initTableCellData();
     }
@@ -58,21 +65,19 @@ export default class Wordwork5 extends Component {
     }
 
     onCollectionUpdate = (querySnapshot) => {
-        const wordmatch = [];
+        const scores = [];
         querySnapshot.forEach((doc) => {
             const { email, score } = doc.data();
-            wordmatch.push({
-                key: doc.id,
-                doc,
+            scores.push({
+                key: doc.id, // Document ID
+                doc, // DocumentSnapshot
                 email,
-                score
+                score,
             });
         });
-        
-    }
-
-    FunctionToGoBack = () => {
-        this.props.navigation.navigate('Menu');
+        this.setState({
+            scores,
+        });
     }
 
     _initTableCellData = () => {
@@ -83,9 +88,15 @@ export default class Wordwork5 extends Component {
         tblData = Array(tblRow);
         for (var j = 0; j < tblRow; j++) {
             tblData[j] = Array(tblCol);
-            for (var i = 0; i < tblCol; i++)
-                //tblData[j][i] = '' + j.toString() + '' + i.toString();
-                tblData[j][i] = '_';
+            var newLetter = this._randomString();
+            var rnum = Math.floor(Math.random() * tblCol);
+            for (var i = 0; i < tblCol; i++) {
+                if (i == rnum) {
+                    tblData[j][i] = newLetter;
+                } else {
+                    tblData[j][i] = '_';
+                }
+            }
         }
 
         this.setState({
@@ -97,14 +108,11 @@ export default class Wordwork5 extends Component {
     _placeLetter2Cell = (xletter) => {
         var myCellRow = this.state.wRow;
         var myCellCol = this.state.wCol;
-        tblData[myCellRow][myCellCol] = xletter; //fill cell
-        // find next cell
+        tblData[myCellRow][myCellCol] = xletter;
         myCellCol = myCellCol + 1;
         if (myCellCol >= tblCol) {
-            //col in row full, change to next row
-            myCellCol = 0; //reset to 0 column
-            myCellRow = myCellRow + 1; // to next row
-            // all row full filled, back to row 0
+            myCellCol = 0;
+            myCellRow = myCellRow + 1;
             if (myCellRow >= tblRow) {
                 myCellRow = 0;
                 myCellCol = 0;
@@ -118,8 +126,78 @@ export default class Wordwork5 extends Component {
         });
     }
 
+    _placeLetter1Cell = (xletter) => {
+        var myCellRow = 0;
+        var myCellCol = this.state.wCol;
+        var nowword = '';
+        var LorR = this.state.isRight;
 
-   
+        if (LorR) {
+            for (var i = (tblCol - 1); i >= 0; i--) {
+                var nowletter = tblData[myCellRow][i];
+                var isEmt = nowletter.localeCompare('_');
+                if (isEmt != 0) {
+                    i = i + 1;
+                    if (i >= tblCol) { i = tblCol - 1; }
+                    tblData[myCellRow][i] = xletter;
+                    break;
+                }
+            }
+        } else {
+            for (var i = 0; i < tblCol; i++) {
+                var nowletter = tblData[myCellRow][i];
+                var isEmt = nowletter.localeCompare('_');
+                if (isEmt != 0) {
+                    i = i - 1;
+                    if (i < 0) { i = 0; }
+                    tblData[myCellRow][i] = xletter;
+                    break;
+                }
+            }
+        }
+
+        for (var i = 0; i < tblCol; i++) {
+            var nowletter = tblData[myCellRow][i];
+            var isEmt = nowletter.localeCompare('_');
+            if (isEmt != 0) {
+                nowword = nowword + tblData[myCellRow][i];
+            }
+        }
+
+        this.setState({
+            //wCol: myCellCol,
+            //wRow: myCellRow,
+            partword: nowword,
+            tableData: tblData,
+        });
+    }
+
+
+    _findemailscore = (xemail) => {
+        var xscore = 0;
+        var userexisting = false;
+        var nowdocid = '';
+        this.ref.get().then(snapshot => {
+            snapshot.docs.forEach(doc => {
+                const { email, score } = doc.data();
+                if (email.localeCompare(xemail) == 0) {
+                    userexisting = true;
+                    nowdocid = doc.id;
+
+                    if (score >= xscore) {
+                        xscore = score;
+                    }
+                }
+            });
+
+            this.setState({
+                userExist: userexisting,
+                nowscore: xscore,
+                docid: nowdocid,
+                isLoading: false,
+            });
+        });
+    }
 
     _randomString = () => {
         var chars = "ABCDEFGHIJKLMNOPQRSTUVWXTZ";
@@ -138,12 +216,53 @@ export default class Wordwork5 extends Component {
     };
 
     _add1aLetterPress = () => {
-        var partwd = this.state.partword + this.state.aletter;
-        this.setState({ partword: partwd });
-        //Place new letter to cell
         var newLetter = this.state.aletter;
-        this._placeLetter2Cell(newLetter);
+        this._placeLetter1Cell(newLetter);
     };
+
+    _bLetterPress = () => {
+        var newLetter = this._randomString();
+        this.setState({ bletter: newLetter });
+    };
+
+    _add1bLetterPress = () => {
+        var newLetter = this.state.bletter;
+        this._placeLetter1Cell(newLetter);
+    };
+
+    _cLetterPress = () => {
+        var newLetter = this._randomString();
+        this.setState({ cletter: newLetter });
+    };
+
+    _add1cLetterPress = () => {
+        var newLetter = this.state.cletter;
+        this._placeLetter1Cell(newLetter);
+    };
+
+    _newLetters = () => {
+        this._aLetterPress();
+        this._bLetterPress();
+        this._cLetterPress();
+    }
+
+    _shiftLettersUp = () => {
+        for (var j = 0; j < (tblRow - 1); j++) {
+            for (var i = 0; i < tblCol; i++) {
+                tblData[j][i] = tblData[j + 1][i];
+            }
+        }
+        var newLetter = this._randomString();
+        var rnum = Math.floor(Math.random() * tblCol);
+        for (var i = 0; i < tblCol; i++) {
+            if (i == rnum) {
+                tblData[tblRow - 1][i] = newLetter;
+            } else {
+                tblData[tblRow - 1][i] = '_';
+            }
+        }
+    }
+
 
     _checkSpelling4Word() {
         this.setState({ isLoading: false });
@@ -165,11 +284,17 @@ export default class Wordwork5 extends Component {
         });
 
         this._initTableCellData();
+        this._newLetters();
     };
 
-    _alertIndex(index) {
-        Alert.alert(`This is row ${index + 1}`);
+    //_alertIndex(index) {
+    //    Alert.alert(`This is row ${index + 1}`);
+    //}
+
+    _alertIndex(data) {
+        Alert.alert(`${data}`);
     }
+
 
     _fetchMeaningData(myword) {
         //Retrieve remote JSON data
@@ -188,20 +313,40 @@ export default class Wordwork5 extends Component {
                     });
 
                     var jstr = JSON.stringify(responseJson);
-                    var xxx = JSON.parse(jstr);
+                    //var xxx = JSON.parse(jstr);
+
+                    this._shiftLettersUp();
 
                     //Check if 'defs' key: spelling correct
                     if (jstr.indexOf("defs") > 0) {
-                        var xscore = this.state.score + 10;
+                        var xscore = this.state.nowscore + 10;
+                        // Add or update score to firebase
                         const { currentUser } = this.state;
+                        var nowid = this.state.docid;
+                        if (nowid.length < 1) {
+                            nowid = this.state.currentUser.email;
+                        }
+
+                        if (this.state.userExist) {
+                            this.ref.doc(nowid).set({
+                                email: this.state.currentUser.email,
+                                score: xscore,
+                            });
+                        } else {
+                            this.ref.add({
+                                email: this.state.currentUser.email,
+                                score: xscore,
+                            });
+
+                            this.setState({
+                                userExist: true,
+                                docid: nowid,
+                            });
+                        }
+
                         this.setState({
                             spellCorrect: true,
-                            score: xscore,
-
-                        });
-                        this.ref.add({
-                            score: xscore,
-                            email: this.state.currentUser.email,
+                            nowscore: xscore,
                         });
                     } else {
                         this.setState({
@@ -334,7 +479,7 @@ export default class Wordwork5 extends Component {
 
         const tblstate = this.state;
         const element = (data, index) => (
-            <TouchableOpacity onPress={() => this._alertIndex(index)}>
+            <TouchableOpacity onPress={() => this._alertIndex(data)}>
                 <View style={styles.btn}>
                     <View style={styles.btn}>
                         <Text style={styles.btnText}>{data}</Text>
@@ -345,7 +490,6 @@ export default class Wordwork5 extends Component {
 
 
         return (
-            <ScrollView>
             <View style={styles.containerStyle}>
                 <View style = {{ flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', paddingTop: 10, paddingLeft: 10}}>
                     <TouchableOpacity onPress = { this.FunctionToGoBack}>
@@ -355,24 +499,23 @@ export default class Wordwork5 extends Component {
                         />
                     </TouchableOpacity>
                 </View>
-                <View style = {{ height:300, width: 390, marginTop:30}}>
-                    <Table borderStyle={{ borderColor: '#ff3333' }}>
-                        <Row data={tblstate.tableHead} style={styles.head} textStyle={styles.text} />
-                        {
-                            tblstate.tableData.map((rowData, index) => (
-                                <TableWrapper key={index} style={styles.row} borderStyle={{ borderWidth: 2, borderColor: 'blue', }}>
-                                    {
-                                        rowData.map((cellData, cellIndex) => (
-                                            <Cell key={cellIndex} data={element(cellData, index)} textStyle={styles.text} />
-                                        ))
-                                    }
-                                </TableWrapper>
-                            ))
-                        }
-                    </Table>
-                </View>
 
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center',marginBottom: 5, marginTop:120 }}>
+                <Table borderStyle={{ borderColor: '#ff3333' }}>
+                    <Row data={tblstate.tableHead} style={styles.head} textStyle={styles.text} />
+                    {
+                        tblstate.tableData.map((rowData, index) => (
+                            <TableWrapper key={index} style={styles.row} borderStyle={{ borderWidth: 2, borderColor: 'blue', }}>
+                                {
+                                    rowData.map((cellData, cellIndex) => (
+                                        <Cell key={cellIndex} data={element(cellData, index)} textStyle={styles.text} />
+                                    ))
+                                }
+                            </TableWrapper>
+                        ))
+                    }
+                </Table>
+
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center',marginBottom: 5, marginTop:120  }}>
                     <View style={{ paddingRight: 5 }}>
                         <TouchableOpacity onLongPress={this._aLetterPress} onPress={this._add1aLetterPress} activeOpacity={0.8} style={styles.buttonStyle} >
                             <Text style={styles.buttontextStyle}>{this.state.aletter}</Text>
@@ -380,36 +523,55 @@ export default class Wordwork5 extends Component {
                     </View>
 
                     <View style={{ paddingLeft: 10, paddingRight: 10 }}>
-                        <Button title='New' backgroundColor="#3b5998" onPress={this._aLetterPress} />
+                        <TouchableOpacity onLongPress={this._bLetterPress} onPress={this._add1bLetterPress} activeOpacity={0.8} style={styles.buttonStyle} >
+                            <Text style={styles.buttontextStyle}>{this.state.bletter}</Text>
+                        </TouchableOpacity>
                     </View>
 
                     <View style={{ paddingLeft: 10, paddingRight: 10 }}>
-                        <Button title='Up' backgroundColor="#3b5998" onPress={this._add1aLetterPress} />
+                        <TouchableOpacity onLongPress={this._cLetterPress} onPress={this._add1cLetterPress} activeOpacity={0.8} style={styles.buttonStyle} >
+                            <Text style={styles.buttontextStyle}>{this.state.cletter}</Text>
+                        </TouchableOpacity>
                     </View>
 
-                    <View style={{ paddingLeft: 20, paddingRight: 20 }}>
+                    <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+                        <Button title='New' backgroundColor="#3b5998" onPress={this._newLetters} />
+                    </View>
+
+                    <View style={{ paddingLeft: 10, paddingRight: 2 }}>
+                        <ToggleSwitch
+                            label="L"
+                            isOn={this.state.isRight}
+                            onColor='red'
+                            offColor='blue'
+                            labelStyle={{ fontSize: 24, color: '#0040ff', fontWeight: 'bold' }}
+                            onToggle={(isR) => { this.setState({ isRight: isR }); }}
+                        />
+                    </View>
+                    <View style={{ paddingLeft: 3 }}>
+                        <Text style={{ fontSize: 24, color: 'red', fontWeight: 'bold' }}>R</Text>
+                    </View>
+                </View>
+
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingBottom: 10 }}>
+                    <View style={{ paddingLeft: 10 }}>
+                        <Text style={{ fontSize: 20 }}>Score: {this.state.nowscore} </Text>
+                    </View >
+                    <View style={{ paddingLeft: 10 }}>
+                        <Text style={{ fontSize: 24 }}>{this.state.spellCorrect ? <Emoji name="+1" /> : <Emoji name="relaxed" />}</Text>
+                    </View >
+                    <View style={{ paddingLeft: 20, paddingRight: 15 }}>
                         <Button title='Check' backgroundColor="#3b5998" onPress={this._checkSpelling4Word.bind(this)} />
                     </View>
-                    <View style={{ paddingLeft: 20 }}>
+                    <View style={{ paddingLeft: 15 }}>
                         <Button title='Reset' backgroundColor="#3b5998" onPress={this._resetInput.bind(this)} />
                     </View >
                 </View>
 
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={{ paddingRight: 10 }}>
-                        <Text style={{ fontSize: 20, color: '#0000cc' }}>{this.state.partword}</Text>
-                    </View>
-                    <View style={{ paddingLeft: 20, paddingRight: 20 }}>
-                        <Text style={{ fontSize: 24, color: '#00cc00', fontWeight: 'bold' }}>{this.state.spellCorrect ? 'Correct!' : ''}</Text>
-                    </View >
-                    <View style={{ paddingLeft: 10 }}>
-                        <Text style={{ fontSize: 20 }}>Score: {this.state.score} </Text>
-                    </View >
-                </View>
-
-                <Swiper style={styles.wrapper} height={380} width={400} showsButtons={true}>
+                <Swiper style={styles.wrapper} height={380} showsButtons={true}>
 
                     <View >
+                        <Text style={{ fontSize: 20, color: 'red', fontWeight: 'bold' }}>{this.state.partword} </Text>
                         <FlatList
                             data={this.state.dataItems}
                             ItemSeparatorComponent={this._flItemSeparator}
@@ -438,7 +600,6 @@ export default class Wordwork5 extends Component {
                 </Swiper>
 
             </View >
-            </ScrollView>
         );
     }
 }
@@ -447,7 +608,7 @@ export default class Wordwork5 extends Component {
 const styles = StyleSheet.create({
     containerStyle: {
         /* justifyContent: 'flex-start', */
-        backgroundColor: '#E5E7E9',
+        margin: 0,
     },
     buttonStyle: {
         padding: 10,
@@ -475,7 +636,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
     },
     wrapper: {
-        width: screenwidth * 0.7,
+        width: screenwidth * 0.9,
     },
     head: { height: 0, backgroundColor: '#808B97' },
     text: { margin: 2, textAlign: 'center' },

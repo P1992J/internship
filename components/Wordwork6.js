@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { StyleSheet, FlatList, Image, Text, View, TouchableOpacity, TextInput, Button, Dimensions, Keyboard, ScrollView, Alert, ActivityIndicator, } from "react-native";
 
 import firebase from 'react-native-firebase';
-import Swiper from 'C:/Users/JULITA VIRAL PATEL/AppData/Local/Microsoft/TypeScript/2.9/node_modules/@types/react-native-swiper';
+import Swiper from 'react-native-swiper';
 
 import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
 
@@ -12,8 +12,7 @@ var tblCol = 8;
 var tblRow = 10;
 var tblData = [];
 
-export default class Wordwork5 extends Component {
-    state = { currentUser: null };
+export default class Wordwork6 extends Component {
     constructor(props) {
         super(props);
 
@@ -28,12 +27,12 @@ export default class Wordwork5 extends Component {
             relatedItems: [],
             partword: '',
             spellCorrect: false,
-            //nowscore: 0,
-            uemail: '',
-            score: 0,
-            //currentUser: null,
-            //userExist: false,
-            //docid: '',
+            nowscore: 0,
+            email: '',
+            scores: [],
+            currentUser: null,
+            userExist: false,
+            docid: '',
             tableHead: [],
             tableData: [],
             wCol: 0,
@@ -48,7 +47,9 @@ export default class Wordwork5 extends Component {
 
         const { currentUser } = firebase.auth();
         this.setState({ currentUser });
-        this.setState({ uemail: this.state.currentUser });
+        // find user existing score
+        var uemail = currentUser.email;
+        this._findemailscore(uemail);
 
         this._initTableCellData();
     }
@@ -58,17 +59,19 @@ export default class Wordwork5 extends Component {
     }
 
     onCollectionUpdate = (querySnapshot) => {
-        const wordmatch = [];
+        const scores = [];
         querySnapshot.forEach((doc) => {
             const { email, score } = doc.data();
-            wordmatch.push({
-                key: doc.id,
-                doc,
+            scores.push({
+                key: doc.id, // Document ID
+                doc, // DocumentSnapshot
                 email,
-                score
+                score,
             });
         });
-        
+        this.setState({
+            scores,
+        });
     }
 
     FunctionToGoBack = () => {
@@ -119,7 +122,31 @@ export default class Wordwork5 extends Component {
     }
 
 
-   
+    _findemailscore = (xemail) => {
+        var xscore = 0;
+        var userexisting = false;
+        var nowdocid = '';
+        this.ref.get().then(snapshot => {
+            snapshot.docs.forEach(doc => {
+                const { email, score } = doc.data();
+                if (email.localeCompare(xemail) == 0) {
+                    userexisting = true;
+                    nowdocid = doc.id;
+
+                    if (score >= xscore) {
+                        xscore = score;
+                    }
+                }
+            });
+
+            this.setState({
+                userExist: userexisting,
+                nowscore: xscore,
+                docid: nowdocid,
+                isLoading: false,
+            });
+        });
+    }
 
     _randomString = () => {
         var chars = "ABCDEFGHIJKLMNOPQRSTUVWXTZ";
@@ -188,20 +215,39 @@ export default class Wordwork5 extends Component {
                     });
 
                     var jstr = JSON.stringify(responseJson);
-                    var xxx = JSON.parse(jstr);
+                    //var xxx = JSON.parse(jstr);
 
                     //Check if 'defs' key: spelling correct
                     if (jstr.indexOf("defs") > 0) {
-                        var xscore = this.state.score + 10;
+                        var xscore = this.state.nowscore + 10;
+                        // Add or update score to firebase
                         const { currentUser } = this.state;
+                        var nowid = this.state.docid;
+                        if (nowid.length < 1) {
+                            nowid = this.state.currentUser.email;
+                        }
+
+                        if (this.state.userExist) {
+                            this.ref.doc(nowid).set({
+                                email: this.state.currentUser.email,
+                                score: xscore,
+                            });
+                        } else {
+                            this.ref.add({
+                                
+                                score: xscore,
+                                email: this.state.currentUser.email,
+                            });
+
+                            this.setState({
+                                userExist: true,
+                                docid: nowid,
+                            });
+                        }
+
                         this.setState({
                             spellCorrect: true,
-                            score: xscore,
-
-                        });
-                        this.ref.add({
-                            score: xscore,
-                            email: this.state.currentUser.email,
+                            nowscore: xscore,
                         });
                     } else {
                         this.setState({
@@ -403,7 +449,7 @@ export default class Wordwork5 extends Component {
                         <Text style={{ fontSize: 24, color: '#00cc00', fontWeight: 'bold' }}>{this.state.spellCorrect ? 'Correct!' : ''}</Text>
                     </View >
                     <View style={{ paddingLeft: 10 }}>
-                        <Text style={{ fontSize: 20 }}>Score: {this.state.score} </Text>
+                        <Text style={{ fontSize: 20 }}>Score: {this.state.nowscore} </Text>
                     </View >
                 </View>
 
