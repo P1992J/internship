@@ -35,7 +35,7 @@ export default class Menu extends Component {
                     </View>
                     <View style = {{ paddingTop:5, paddingBottom:30}}>
                     <TouchableOpacity style = {styles.submitButtonStyle}
-                           onPress={() => this.props.navigation.navigate('StarRating')}>
+                           onPress={() => this.props.navigation.navigate('Score')}>
                             <Text style = {{ color:'#800080',fontSize: 22, fontStyle: 'italic', fontWeight:'bold' }}> Score </Text>
                         </TouchableOpacity>
                     </View>

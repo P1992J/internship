@@ -78,6 +78,11 @@ export default class Login extends React.Component {
               onPress={() => this.props.navigation.navigate('SignUp')}
               />
             </View>
+            <View style = {{justifyContent:'center', alignItems:'center'}}>
+              <Text style = {{fontSize:15, fontWeight:'bold', marginTop:130}}>
+                @KiwiCube Limited
+              </Text>
+            </View>
           </View>
         </KeyboardAvoidingView>
         </ScrollView>
@@ -89,8 +94,8 @@ const styles = StyleSheet.create({
   
  
   textInput: {
-    fontSize:15,
-    color: '#F53004',
+    fontSize:17,
+    color: '#FAFDFF',
     height: 43,
     width: '90%',
     borderColor: '#353836',

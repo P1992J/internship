@@ -52,6 +52,12 @@ export default class Home extends Component {
                             />
                         </TouchableOpacity>
                     </View>
+                    
+                </View>
+                <View style = {{justifyContent:'center', alignItems:'center', marginBottom:10}}>
+                    <Text style = {{fontSize:15, fontWeight:'bold'}}>
+                         @KiwiCube Limited
+                    </Text>
                 </View>
             </View>
         );

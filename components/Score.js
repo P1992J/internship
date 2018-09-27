@@ -19,7 +19,7 @@ export default class Score extends Component {
             scores: [],
             currentUser: null,
             highScore: 0,
-            lowScore: 0,
+            
         };
 
     }
@@ -61,7 +61,7 @@ export default class Score extends Component {
 
     _findHighLowScore = () => {
         var xhighScore = 0;
-        var xlowScore = 10;
+        
         this.ref.get().then(snapshot => {
             snapshot.docs.forEach(doc => {
                 const { email, score } = doc.data();
@@ -69,14 +69,12 @@ export default class Score extends Component {
                     xhighScore = score;
                 }
 
-                if (score < xlowScore) {
-                    xlowScore = score
-                }
+                
             });
 
             this.setState({
                 highScore: xhighScore,
-                lowScore: xlowScore,
+                
                 isLoading: false,
             });
         });
@@ -113,11 +111,9 @@ export default class Score extends Component {
                 <View style={{ flex:1,flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', marginBottom:70 }}>
                 
                     <View style={{ paddingLeft: 10, paddingRight: 10 }}>
-                        <Text style={{ fontSize: 27, color: '#ff0000' }}>Highest: {this.state.highScore}</Text>
+                        <Text style={{ fontSize: 27, color: '#00cc00' }}>Highest Score: {this.state.highScore}</Text>
                     </View >
-                    <View style={{ paddingLeft: 10 }}>
-                        <Text style={{ fontSize: 27, color: '#00cc00' }}>Lowest: {this.state.lowScore} </Text>
-                    </View >
+                    
                 </View>
 
             </View >

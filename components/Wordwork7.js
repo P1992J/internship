@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, FlatList, Text, View, TouchableOpacity, TextInput, Button, Dimensions, Keyboard, ScrollView, Alert, ActivityIndicator, } from "react-native";
+import { StyleSheet, Image, FlatList, Text, View, TouchableOpacity, TextInput, Button, Dimensions, Keyboard, ScrollView, Alert, ActivityIndicator, } from "react-native";
 
 import firebase from 'react-native-firebase';
 import Swiper from 'react-native-swiper';
@@ -32,12 +32,12 @@ export default class Wordwork7 extends Component {
             relatedItems: [],
             partword: '',
             spellCorrect: false,
-            nowscore: 0,
-            email: '',
-            scores: [],
-            currentUser: null,
-            userExist: false,
-            docid: '',
+            //nowscore: 0,
+            uemail: '',
+            score: 0,
+            //currentUser: null,
+            //userExist: false,
+            //docid: '',
             tableHead: [],
             tableData: [],
             wCol: 0,
@@ -54,9 +54,7 @@ export default class Wordwork7 extends Component {
         const { currentUser } = firebase.auth();
         this.setState({ currentUser });
         // find user existing score
-        var uemail = currentUser.email;
-        this._findemailscore(uemail);
-
+        this.setState({ uemail: this.state.currentUser });
         this._initTableCellData();
     }
 
@@ -78,6 +76,10 @@ export default class Wordwork7 extends Component {
         this.setState({
             scores,
         });
+    }
+
+    FunctionToGoBack = () => {
+        this.props.navigation.navigate('Menu');
     }
 
     _initTableCellData = () => {
@@ -173,31 +175,7 @@ export default class Wordwork7 extends Component {
     }
 
 
-    _findemailscore = (xemail) => {
-        var xscore = 0;
-        var userexisting = false;
-        var nowdocid = '';
-        this.ref.get().then(snapshot => {
-            snapshot.docs.forEach(doc => {
-                const { email, score } = doc.data();
-                if (email.localeCompare(xemail) == 0) {
-                    userexisting = true;
-                    nowdocid = doc.id;
-
-                    if (score >= xscore) {
-                        xscore = score;
-                    }
-                }
-            });
-
-            this.setState({
-                userExist: userexisting,
-                nowscore: xscore,
-                docid: nowdocid,
-                isLoading: false,
-            });
-        });
-    }
+   
 
     _randomString = () => {
         var chars = "ABCDEFGHIJKLMNOPQRSTUVWXTZ";
@@ -319,34 +297,18 @@ export default class Wordwork7 extends Component {
 
                     //Check if 'defs' key: spelling correct
                     if (jstr.indexOf("defs") > 0) {
-                        var xscore = this.state.nowscore + 10;
+                        var xscore = this.state.score + 10;
                         // Add or update score to firebase
                         const { currentUser } = this.state;
-                        var nowid = this.state.docid;
-                        if (nowid.length < 1) {
-                            nowid = this.state.currentUser.email;
-                        }
-
-                        if (this.state.userExist) {
-                            this.ref.doc(nowid).set({
-                                email: this.state.currentUser.email,
-                                score: xscore,
-                            });
-                        } else {
-                            this.ref.add({
-                                email: this.state.currentUser.email,
-                                score: xscore,
-                            });
-
-                            this.setState({
-                                userExist: true,
-                                docid: nowid,
-                            });
-                        }
+                        
 
                         this.setState({
                             spellCorrect: true,
-                            nowscore: xscore,
+                            score: xscore,
+                        });
+                        this.ref.add({
+                            score: xscore,
+                            email: this.state.currentUser.email,
                         });
                     } else {
                         this.setState({
@@ -490,31 +452,35 @@ export default class Wordwork7 extends Component {
 
 
         return (
+            <ScrollView>
             <View style={styles.containerStyle}>
-                <View style = {{ flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', paddingTop: 10, paddingLeft: 10}}>
+                <View style = {{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', paddingTop: 10, paddingLeft: 10}}>
                     <TouchableOpacity onPress = { this.FunctionToGoBack}>
                         <Image 
                             style = {{width: 40, height: 40}}
                             source = {{ uri: 'https://firebasestorage.googleapis.com/v0/b/wordmatch-b0b75.appspot.com/o/back_arrow.png?alt=media&token=06f9f660-fc7f-4c0f-b9d5-d51f0cfbcde3'}}
                         />
                     </TouchableOpacity>
+                    <View style={{ paddingLeft: 100 }}>
+                        <Text style={{ fontSize: 20 }}>Score: {this.state.score} </Text>
+                    </View >
                 </View>
-
-                <Table borderStyle={{ borderColor: '#ff3333' }}>
-                    <Row data={tblstate.tableHead} style={styles.head} textStyle={styles.text} />
-                    {
-                        tblstate.tableData.map((rowData, index) => (
-                            <TableWrapper key={index} style={styles.row} borderStyle={{ borderWidth: 2, borderColor: 'blue', }}>
-                                {
-                                    rowData.map((cellData, cellIndex) => (
-                                        <Cell key={cellIndex} data={element(cellData, index)} textStyle={styles.text} />
-                                    ))
-                                }
-                            </TableWrapper>
-                        ))
-                    }
-                </Table>
-
+                <View style = {{ height:300, width: 390, marginTop:30}}>
+                    <Table borderStyle={{ borderColor: '#ff3333' }}>
+                        <Row data={tblstate.tableHead} style={styles.head} textStyle={styles.text} />
+                        {
+                            tblstate.tableData.map((rowData, index) => (
+                                <TableWrapper key={index} style={styles.row} borderStyle={{ borderWidth: 2, borderColor: 'blue', }}>
+                                    {
+                                        rowData.map((cellData, cellIndex) => (
+                                            <Cell key={cellIndex} data={element(cellData, index)} textStyle={styles.text} />
+                                        ))
+                                    }
+                                </TableWrapper>
+                            ))
+                        }
+                    </Table>
+                </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center',marginBottom: 5, marginTop:120  }}>
                     <View style={{ paddingRight: 5 }}>
                         <TouchableOpacity onLongPress={this._aLetterPress} onPress={this._add1aLetterPress} activeOpacity={0.8} style={styles.buttonStyle} >
@@ -554,9 +520,7 @@ export default class Wordwork7 extends Component {
                 </View>
 
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingBottom: 10 }}>
-                    <View style={{ paddingLeft: 10 }}>
-                        <Text style={{ fontSize: 20 }}>Score: {this.state.nowscore} </Text>
-                    </View >
+                    
                     <View style={{ paddingLeft: 10 }}>
                         <Text style={{ fontSize: 24 }}>{this.state.spellCorrect ? <Emoji name="+1" /> : <Emoji name="relaxed" />}</Text>
                     </View >
@@ -568,9 +532,9 @@ export default class Wordwork7 extends Component {
                     </View >
                 </View>
 
-                <Swiper style={styles.wrapper} height={380} showsButtons={true}>
+                <Swiper style={styles.wrapper} height={380} width={400} showsButtons={true}>
 
-                    <View >
+                    <View style={{ marginLeft: 20, marginRight: 20 }} >
                         <Text style={{ fontSize: 20, color: 'red', fontWeight: 'bold' }}>{this.state.partword} </Text>
                         <FlatList
                             data={this.state.dataItems}
@@ -580,7 +544,7 @@ export default class Wordwork7 extends Component {
                         />
                     </View>
 
-                    <View >
+                    <View style={{ marginLeft: 20, marginRight: 20 }}>
                         <FlatList
                             data={this.state.hintItems}
                             ItemSeparatorComponent={this._flItemSeparator}
@@ -589,7 +553,7 @@ export default class Wordwork7 extends Component {
                         />
                     </View>
 
-                    <View >
+                    <View style={{ marginLeft: 20, marginRight: 20 }} >
                         <FlatList
                             data={this.state.relatedItems}
                             ItemSeparatorComponent={this._flItemSeparator}
@@ -600,6 +564,7 @@ export default class Wordwork7 extends Component {
                 </Swiper>
 
             </View >
+            </ScrollView>
         );
     }
 }
@@ -608,7 +573,7 @@ export default class Wordwork7 extends Component {
 const styles = StyleSheet.create({
     containerStyle: {
         /* justifyContent: 'flex-start', */
-        margin: 0,
+        backgroundColor: '#E5E7E9',
     },
     buttonStyle: {
         padding: 10,
@@ -636,7 +601,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
     },
     wrapper: {
-        width: screenwidth * 0.9,
+        width: screenwidth * 0.7,
     },
     head: { height: 0, backgroundColor: '#808B97' },
     text: { margin: 2, textAlign: 'center' },

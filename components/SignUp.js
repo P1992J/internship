@@ -3,13 +3,13 @@ import { ScrollView, StyleSheet, Text, TextInput, View, Button, Image, Touchable
 import firebase from 'react-native-firebase'
 
 export default class SignUp extends React.Component {
-  state = { email: '', password: '',recoveryCode:'', errorMessage: null }
+  state = { email: '', password: '', errorMessage: null }
 
   handleSignUp = () => {
-    const { email, password, recoveryCode } = this.state
+    const { email, password } = this.state
     firebase
       .auth()
-      .createUserAndRetrieveDataWithEmailAndPassword(email, password,recoveryCode)
+      .createUserAndRetrieveDataWithEmailAndPassword(email, password)
       .then(user => this.props.navigation.navigate('Menu'))
       .catch(error => this.setState({ errorMessage: error.message }))
   }
@@ -65,14 +65,7 @@ export default class SignUp extends React.Component {
             onChangeText={password => this.setState({ password })}
             value={this.state.password}
           />
-          <TextInput
-            secureTextEntry
-            placeholder="Recovery Code"
-            autoCapitalize="none"
-            style={styles.textInput}
-            onChangeText={recoveryCode => this.setState({ recoveryCode })}
-            value={this.state.recoveryCode}
-          />
+          
           
           <View style = {{  flexDirection: 'row',justifyContent: 'flex-start', alignItems:'stretch', padding:20}} >
             <View style = {{ paddingRight: 30}}>
@@ -88,7 +81,11 @@ export default class SignUp extends React.Component {
               onPress={() => this.props.navigation.navigate('Login')}
             />
           </View>
-          
+          <View style = {{justifyContent:'center', alignItems:'center'}}>
+            <Text style = {{fontSize:15, fontWeight:'bold', marginTop:130}}>
+               @KiwiCube Limited
+            </Text>
+          </View>
         </View>
       </KeyboardAvoidingView>
       </ScrollView>
@@ -100,8 +97,8 @@ export default class SignUp extends React.Component {
 const styles = StyleSheet.create({
   
   textInput: {
-    fontSize:15,
-    color: '#F53004',
+    fontSize:17,
+    color: '#FAFDFF',
     height: 43,
     width: '90%',
     borderColor: '#353836',

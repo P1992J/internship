@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Image, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 
 export default class Help extends Component {
     FunctionToGoBack = () => {
@@ -7,6 +7,7 @@ export default class Help extends Component {
     }
     render() {
         return (
+            <ScrollView>
             <View style = {styles.containerStyle}>
                 <View style = {{ flex:1, flexDirection: 'row', justifyContent: 'flex-start' }}>
                     <Image
@@ -30,13 +31,41 @@ export default class Help extends Component {
                     </Text>
                 </View>
                 <View  style = {{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', padding:30}}>
-                    <Text style = {{ fontSize:10, fontStyle: 'italic', fontWeight: 'normal', paddingTop: 20}}>
-                       
+                    <Text style = {{ fontSize:20, fontStyle: 'italic', fontWeight: 'normal', paddingTop: 20}}>
+                        Click on <Text style = {{fontWeight:'bold'}}>"Play" </Text> button to start the game.
+                    </Text>
+                    <Text style = {{ fontSize:20, fontStyle: 'italic', fontWeight: 'normal', paddingTop: 20}}>
+                        If do have already email account then go with <Text style = {{fontWeight:'bold'}}> "Already have an account" </Text>option for login. Select a <Text style = {{fontWeight:'bold'}}> "New Game" </Text> 
+                         or <Text style = {{fontWeight:'bold'}}>"Resume Game"</Text> to play a game.
+                        
+                    </Text>
+                    <Text style = {{ fontSize:20, fontStyle: 'italic', fontWeight: 'normal', paddingTop: 20}}>
+                        If do not have email account then please <Text style = {{fontWeight: 'bold'}}>Sign Up</Text> to play a game.
+                    </Text>
+                    <Text style = {{ fontSize:20, fontStyle: 'italic', fontWeight: 'normal', paddingTop: 20}}>
+                        Here, <Text style = {{fontWeight:'bold'}}> Menu </Text> options after Login or Sign Up.
+                    </Text>
+                    <Text style = {{ fontSize:20, fontStyle: 'italic', fontWeight: 'normal', paddingTop: 20}}>
+                        <Text style = {{fontWeight:'bold'}}>New Game: </Text> 
+                    </Text>
+                    <Text style = {{ fontSize:20, fontStyle: 'italic', fontWeight: 'normal', paddingTop: 20}}>
+                        <Text style = {{fontWeight:'bold'}}>Resume Game: </Text> 
+                    </Text>
+                    <Text style = {{ fontSize:20, fontStyle: 'italic', fontWeight: 'normal', paddingTop: 20}}>
+                        <Text style = {{fontWeight:'bold'}}>Score: </Text> 
+                    </Text>
+                    <Text style = {{ fontSize:20, fontStyle: 'italic', fontWeight: 'normal', paddingTop: 20}}>
+                        For <Text style = {{fontWeight:'bold'}}>Setting </Text> option, can give <Text style = {{fontWeight:'bold'}}> Rate the Application </Text> using stars.
                     </Text>
                     
                 </View>
-                
+                <View style = {{justifyContent:'center', alignItems:'center', marginBottom:10}}>
+                    <Text style = {{fontSize:15, fontWeight:'bold'}}>
+                         @KiwiCube Limited
+                    </Text>
+                </View>
             </View>
+            </ScrollView>
         );
     }
 }

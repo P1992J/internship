@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, FlatList, Image, Text, View, TouchableOpacity, TextInput, Button, Dimensions, Keyboard, ScrollView, Alert, ActivityIndicator, } from "react-native";
 
 import firebase from 'react-native-firebase';
-import Swiper from 'C:/Users/JULITA VIRAL PATEL/AppData/Local/Microsoft/TypeScript/2.9/node_modules/@types/react-native-swiper';
+import Swiper from 'react-native-swiper';
 
 import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
 
