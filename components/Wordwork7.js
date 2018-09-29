@@ -107,6 +107,34 @@ export default class Wordwork7 extends Component {
         });
     }
 
+    _initTableCellData = () => {
+        var myHead = Array(tblCol);
+        for (var i = 0; i < tblCol; i++)
+            myHead[i] = 'H' + i.toString();
+
+        tblData = Array(tblRow);
+        for (var j = 0; j < tblRow; j++) {
+            tblData[j] = Array(tblCol);
+            var newLetter = this._randomString();
+            var rnum = Math.floor(Math.random() * tblCol);
+            for (var i = 0; i < tblCol; i++) {
+                if (i == rnum) {
+                    tblData[j][i] = newLetter;
+                } else {
+                    tblData[j][i] = '_';
+                }
+            }
+        }
+
+        this.setState({
+            tableHead: myHead,
+            tableData: tblData,
+        });
+    }
+
+   
+
+
     _placeLetter2Cell = (xletter) => {
         var myCellRow = this.state.wRow;
         var myCellCol = this.state.wCol;
@@ -187,6 +215,7 @@ export default class Wordwork7 extends Component {
         }
         return randomstr;
     }
+    
 
     _aLetterPress = () => {
         var newLetter = this._randomString();
@@ -480,6 +509,7 @@ export default class Wordwork7 extends Component {
                             ))
                         }
                     </Table>
+                    
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center',marginBottom: 5, marginTop:120  }}>
                     <View style={{ paddingRight: 5 }}>
