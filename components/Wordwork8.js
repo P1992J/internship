@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { StyleSheet, Image, FlatList, Text, View, TouchableOpacity, TextInput, Button, Dimensions, Keyboard, ScrollView, Alert, ActivityIndicator, } from "react-native";
+import React, { Component } from "react";
+import { StyleSheet,Image, FlatList, Text, View, TouchableOpacity, TextInput, Button, Dimensions, Keyboard, ScrollView, Alert, ActivityIndicator, } from "react-native";
 
 import firebase from 'react-native-firebase';
 import Swiper from 'react-native-swiper';
@@ -15,7 +15,7 @@ var tblCol = 8;
 var tblRow = 10;
 var tblData = [];
 
-export default class Wordwork7 extends Component {
+export default class Wordwork6 extends Component {
     constructor(props) {
         super(props);
 
@@ -57,6 +57,8 @@ export default class Wordwork7 extends Component {
         this.setState({ currentUser });
         // find user existing score
         this.setState({ uemail: this.state.currentUser });
+        
+
         this._initTableCellData();
     }
 
@@ -80,10 +82,6 @@ export default class Wordwork7 extends Component {
         });
     }
 
-    FunctionToGoBack = () => {
-        this.props.navigation.navigate('Menu');
-    }
-
     _initTableCellData = () => {
         var myHead = Array(tblCol);
         for (var i = 0; i < tblCol; i++)
@@ -108,34 +106,6 @@ export default class Wordwork7 extends Component {
             tableData: tblData,
         });
     }
-
-    _initTableCellData = () => {
-        var myHead = Array(tblCol);
-        for (var i = 0; i < tblCol; i++)
-            myHead[i] = 'H' + i.toString();
-
-        tblData = Array(tblRow);
-        for (var j = 0; j < tblRow; j++) {
-            tblData[j] = Array(tblCol);
-            var newLetter = this._randomString();
-            var rnum = Math.floor(Math.random() * tblCol);
-            for (var i = 0; i < tblCol; i++) {
-                if (i == rnum) {
-                    tblData[j][i] = newLetter;
-                } else {
-                    tblData[j][i] = '_';
-                }
-            }
-        }
-
-        this.setState({
-            tableHead: myHead,
-            tableData: tblData,
-        });
-    }
-
-   
-
 
     _placeLetter2Cell = (xletter) => {
         var myCellRow = this.state.wRow;
@@ -159,7 +129,8 @@ export default class Wordwork7 extends Component {
     }
 
     _placeLetter1Cell = (xletter) => {
-        var myCellRow = 0;
+        var workingRow = this.state.cRow;
+        var myCellRow = workingRow;
         var myCellCol = this.state.wCol;
         var nowword = '';
         var LorR = this.state.isRight;
@@ -204,8 +175,10 @@ export default class Wordwork7 extends Component {
         });
     }
 
-
-   
+    FunctionToGoBack = () => {
+        this.props.navigation.navigate('Menu');
+    }
+    
 
     _randomString = () => {
         var chars = "ABCDEFGHIJKLMNOPQRSTUVWXTZ";
@@ -217,7 +190,6 @@ export default class Wordwork7 extends Component {
         }
         return randomstr;
     }
-    
 
     _aLetterPress = () => {
         var newLetter = this._randomString();
@@ -256,7 +228,8 @@ export default class Wordwork7 extends Component {
     }
 
     _shiftLettersUp = () => {
-        for (var j = 0; j < (tblRow - 1); j++) {
+        var workingRow = this.state.cRow;
+        for (var j = workingRow; j < (tblRow - 1); j++) {
             for (var i = 0; i < tblCol; i++) {
                 tblData[j][i] = tblData[j + 1][i];
             }
@@ -351,8 +324,6 @@ export default class Wordwork7 extends Component {
                         var xscore = this.state.score + 10;
                         // Add or update score to firebase
                         const { currentUser } = this.state;
-                        
-
                         this.setState({
                             spellCorrect: true,
                             score: xscore,
@@ -372,6 +343,9 @@ export default class Wordwork7 extends Component {
                 .catch((error) => {
                     console.error(error);
                 });
+
+                
+                
 
         }
     }
@@ -531,9 +505,8 @@ export default class Wordwork7 extends Component {
                         ))
                     }
                 </Table>
-                    
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center',marginBottom: 5, marginTop:120  }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center',marginBottom: 5, marginTop:120 }}>
                     <View style={{ paddingRight: 5 }}>
                         <TouchableOpacity onLongPress={this._aLetterPress} onPress={this._add1aLetterPress} activeOpacity={0.8} style={styles.buttonStyle} >
                             <Text style={styles.buttontextStyle}>{this.state.aletter}</Text>
@@ -573,23 +546,23 @@ export default class Wordwork7 extends Component {
 
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingBottom: 10 }}>
                     
-                    <View style={{ paddingLeft: 10 }}>
+                    <View style={{ paddingLeft: 7 }}>
                         <Text style={{ fontSize: 24 }}>{this.state.spellCorrect ? <Emoji name="+1" /> : <Emoji name="relaxed" />}</Text>
                     </View >
-                    <View style={{ paddingLeft: 20, paddingRight: 15 }}>
+                    <View style={{ paddingLeft: 7, paddingRight: 10 }}>
                         <Button title='Check' backgroundColor="#3b5998" onPress={this._checkSpelling4Word.bind(this)} />
                     </View>
-                    <View style={{ paddingLeft: 15 }}>
+                    <View style={{ paddingLeft: 10, paddingRight: 10 }}>
                         <Button title='Reset' backgroundColor="#3b5998" onPress={this._resetInput.bind(this)} />
                     </View >
                     <View style={{ paddingLeft: 15 }}>
-                        <Button title={'Next Row' + this.state.cRow} backgroundColor="#000099" onPress={this._nextRow.bind(this)} />
+                        <Button title={'Row No:' + this.state.cRow}  backgroundColor="#000099" onPress={this._nextRow.bind(this)} />
                     </View >
                 </View>
 
                 <Swiper style={styles.wrapper} height={380} width={400} showsButtons={true}>
 
-                    <View style={{ marginLeft: 20, marginRight: 20 }} >
+                    <View style={{ marginLeft: 20, marginRight: 20 }}>
                         <Text style={{ fontSize: 20, color: 'red', fontWeight: 'bold' }}>{this.state.partword} </Text>
                         <FlatList
                             data={this.state.dataItems}
@@ -608,7 +581,7 @@ export default class Wordwork7 extends Component {
                         />
                     </View>
 
-                    <View style={{ marginLeft: 20, marginRight: 20 }} >
+                    <View style={{ marginLeft: 20, marginRight: 20 }}>
                         <FlatList
                             data={this.state.relatedItems}
                             ItemSeparatorComponent={this._flItemSeparator}

@@ -14,8 +14,10 @@ import Menu from './Menu'
 //import Resume from './Resume'
 import Score from './Score'
 //import Wordwork5 from './Wordwork5'
-import Wordwork6 from './Wordwork6'
-import Wordwork7 from './Wordwork7'
+//import Wordwork6 from './Wordwork6'
+//import Wordwork7 from './Wordwork7'
+import Wordwork8 from './Wordwork8'
+import Wordwork9 from './Wordwork9'
 import StarRating from './StarRating'
 
 
@@ -32,9 +34,11 @@ const MyApp = SwitchNavigator(
     //Main,
     //Resume,
     //Wordwork5,
-    Wordwork6,
+    //Wordwork6,
     Score,
-    Wordwork7,
+    //Wordwork7,
+    Wordwork8,
+    Wordwork9,
     StarRating
     
   },

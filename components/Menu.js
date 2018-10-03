@@ -23,13 +23,13 @@ export default class Menu extends Component {
                 <View style = {{ flexDirection: 'column', justifyContent:'center', alignItems:'center', paddingBottom:50}}>
                     <View style = {{ paddingBottom:30 }}>
                         <TouchableOpacity style = {styles.submitButtonStyle}
-                           onPress={() => this.props.navigation.navigate('Wordwork7')}>
+                           onPress={() => this.props.navigation.navigate('Wordwork8')}>
                             <Text style = {{ color:'#800080',fontSize: 22, fontStyle: 'italic', fontWeight:'bold'}}> New Game </Text>
                         </TouchableOpacity>
                     </View>
                     <View style = {{  paddingTop: 5, paddingBottom:30 }}>
                     <TouchableOpacity style = {styles.submitButtonStyle}
-                           onPress={() => this.props.navigation.navigate('Wordwork6')}>
+                           onPress={() => this.props.navigation.navigate('Wordwork9')}>
                             <Text style = {{color:'#800080', fontSize: 22, fontStyle: 'italic', fontWeight:'bold'}}> Resume Game </Text>
                         </TouchableOpacity>
                     </View>
